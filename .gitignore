@@ -1,0 +1,6 @@
+Doxyfile
+build
+build/*
+!build/.empty
+doc/*
+!doc/.empty
