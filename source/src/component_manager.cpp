@@ -1,4 +1,5 @@
-#include <gamenge/ecs/ecs.hpp>
+#include <gamenge/common/common.hpp>
+#include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/component_manager.hpp>
 
 using namespace Gamenge;
@@ -23,6 +24,20 @@ void ComponentManager::removeComponent(EID eid, Mask mask)
         delete componentGroups[mask][eid];
     }
     componentGroups[mask][eid] = NULL;
+}
+
+void ComponentManager::clearEntity(EID eid)
+{
+    for (std::map<Mask, ComponentGroup>::iterator it = componentGroups.begin();
+        it != componentGroups.end();
+        ++it
+    ) {
+        if (it->second[eid] == NULL) {
+            continue;
+        }
+        delete it->second[eid];
+        it->second[eid] = NULL;
+    }
 }
 
 ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)

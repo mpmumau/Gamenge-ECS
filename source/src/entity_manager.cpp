@@ -1,6 +1,7 @@
 #include <stdexcept>
 
-#include <gamenge/ecs/ecs.hpp>
+#include <gamenge/common/common.hpp>
+#include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/entity_manager.hpp>
 
 using namespace Gamenge;
@@ -23,9 +24,30 @@ EID EntityManager::addEntity()
     return eid;
 }
 
-Entity EntityManager::getEntity(EID eid)
+void EntityManager::removeEntity(EID eid)
 {
-    return entities[eid];
+    entities[eid].mask = 0x00;
+    entities[eid].enabled = false;
+}
+
+void EntityManager::addMask(EID eid, Mask mask)
+{
+    entities[eid].mask = entities[eid].mask | mask;
+}
+
+Mask EntityManager::getMask(EID eid)
+{
+    return entities[eid].mask;
+}
+
+void EntityManager::removeMask(EID eid, Mask mask)
+{
+    entities[eid].mask = entities[eid].mask &~ mask;
+}
+
+bool EntityManager::isEnabled(EID eid)
+{
+    return entities[eid].enabled;
 }
 
 void EntityManager::incrementNextEntity()

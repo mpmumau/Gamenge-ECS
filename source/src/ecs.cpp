@@ -1,21 +1,50 @@
 #include <stdio.h>
 
 #include <gamenge/common/common.hpp>
+#include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/ecs.hpp>
 
 using namespace Gamenge;
 
-bool MaskUtils::matches(Mask needle, Mask haystack)
-{
-    return (needle & haystack) == haystack;
-}
-
-bool MaskUtils::matchesAny(Mask needle, Mask haystack)
-{
-    return (needle & haystack) != 0;
-}
-
 EID ECS::addEntity()
 {
-    return 12;
+    return entityManager.addEntity();
+}
+
+Mask ECS::getEntity(EID eid)
+{
+    return entityManager.getMask(eid);
+}
+
+bool ECS::isEnabled(EID eid)
+{
+    return entityManager.isEnabled(eid);
+}
+
+void ECS::removeEntity(EID eid)
+{
+    componentManager.clearEntity(eid);
+    entityManager.removeEntity(eid);
+}
+
+void ECS::addComponent(EID eid, Mask mask, Component *component)
+{
+    componentManager.addComponent(eid, mask, component);
+    entityManager.addMask(eid, mask);
+}
+
+Component *ECS::getComponent(EID eid, Mask mask)
+{
+    return componentManager.getComponent(eid, mask);
+}
+
+void ECS::removeComponent(EID eid, Mask mask)
+{
+    componentManager.removeComponent(eid, mask);
+    entityManager.removeMask(eid, mask);
+}
+
+void ECS::destroy()
+{
+    componentManager.destroy();
 }

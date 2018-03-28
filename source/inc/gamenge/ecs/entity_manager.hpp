@@ -1,7 +1,8 @@
 #ifndef GAMENGE_ENTITY_MANAGER_H
 #define GAMENGE_ENTITY_MANAGER_H
 
-#include <gamenge/ecs/ecs.hpp>
+#include <gamenge/common/common.hpp>
+#include <gamenge/ecs/ecs_common.hpp>
 
 using namespace Gamenge;
 
@@ -12,7 +13,12 @@ namespace Gamenge {
         EntityManager();
 
         EID addEntity();
-        Entity getEntity(EID);
+        void removeEntity(EID);
+        void addMask(EID, Mask);
+        Mask getMask(EID);
+        void removeMask(EID, Mask);
+        bool isEnabled(EID);
+
     private:
         Entity entities[ECS_MAX_ENTITIES];
         EID nextEntity;

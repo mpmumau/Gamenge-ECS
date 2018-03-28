@@ -3,7 +3,8 @@
 
 #include <map>
 
-#include <gamenge/ecs/ecs.hpp>
+#include <gamenge/common/common.hpp>
+#include <gamenge/ecs/ecs_common.hpp>
 
 namespace Gamenge {
 
@@ -12,11 +13,14 @@ namespace Gamenge {
         void addComponent(EID, Mask, Component *);
         Component *getComponent(EID, Mask);
         void removeComponent(EID, Mask);
+        void clearEntity(EID);
         ComponentBundle getComponentBundle(EID, Mask);
         void destroy();
     private:
         typedef Component * ComponentGroup[ECS_MAX_ENTITIES];
+
         std::map<Mask, ComponentGroup> componentGroups;
+        
         void createComponentGroup(Mask);
     };
 

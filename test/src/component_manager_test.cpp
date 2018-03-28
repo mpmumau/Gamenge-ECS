@@ -8,22 +8,19 @@
 
 using namespace Gamenge;
 
-typedef struct TestComponent1 : Component {
-    float x, y, z;
-} TestComponent1;
-
-typedef struct TestComponent2: Component {
-    std::string color;
-    unsigned int r;
-    unsigned int g;
-    unsigned int b;
-} TestComponent2;
-
-Mask TEST_COMPONENT1_MASK = 0x01 << 5;
-Mask TEST_COMPONENT2_MASK = 0x01 << 17;
-
 class ComponentManagerTest : public ::testing::Test {
     protected:
+        typedef struct TestComponent1 : Component {
+            float x, y, z;
+        } TestComponent1;
+
+        typedef struct TestComponent2: Component {
+            std::string color;
+            unsigned int r;
+            unsigned int g;
+            unsigned int b;
+        } TestComponent2;
+
         virtual void SetUp()
         {
             eid = ecs.addEntity();
@@ -38,24 +35,28 @@ class ComponentManagerTest : public ::testing::Test {
             component2->r = 128;
             component2->g = 127;
             component2->b = 126;
+
+            componentManager.addComponent(eid, TEST_COMPONENT1_MASK, component1);
+            componentManager.addComponent(eid, TEST_COMPONENT2_MASK, component2);
         }
 
         virtual void TearDown() {
-            componentManager.destroy();
+            ecs.destroy();
         }
 
         ECS ecs;
-        EID eid;
         ComponentManager componentManager;
+        EID eid;
+
+        Mask TEST_COMPONENT1_MASK = 0x01 << 5;
+        Mask TEST_COMPONENT2_MASK = 0x01 << 17;
+
         TestComponent1 *component1;
         TestComponent2 *component2;
 };
 
-TEST_F(ComponentManagerTest, AddGetComponent)
+TEST_F(ComponentManagerTest, addGetComponent)
 {
-    componentManager.addComponent(eid, TEST_COMPONENT1_MASK, component1);
-    componentManager.addComponent(eid, TEST_COMPONENT2_MASK, component2);
-
     TestComponent1 *returnedComponent1 = dynamic_cast<TestComponent1 *> (componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
     TestComponent2 *returnedComponent2 = dynamic_cast<TestComponent2 *> (componentManager.getComponent(eid, TEST_COMPONENT2_MASK));
 
@@ -71,24 +72,28 @@ TEST_F(ComponentManagerTest, AddGetComponent)
     EXPECT_EQ(NULL, componentManager.getComponent(52, TEST_COMPONENT2_MASK));
 }
 
-TEST_F(ComponentManagerTest, RemoveComponent)
+TEST_F(ComponentManagerTest, removeComponent)
 {
-    TestComponent1 *component;
-
-    componentManager.addComponent(eid, TEST_COMPONENT1_MASK, component1);
     TestComponent1 *returnedComponent = dynamic_cast<TestComponent1 *> (componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
-
     EXPECT_FALSE(NULL == returnedComponent);
 
     componentManager.removeComponent(eid, TEST_COMPONENT1_MASK);
-    EXPECT_EQ(NULL, componentManager.getComponent(eid, TEST_COMPONENT2_MASK));
+    EXPECT_EQ(NULL, componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
 }
 
-TEST_F(ComponentManagerTest, GetComponentBundle)
+TEST_F(ComponentManagerTest, clearEntity)
 {
-    componentManager.addComponent(eid, TEST_COMPONENT1_MASK, component1);
-    componentManager.addComponent(eid, TEST_COMPONENT2_MASK, component2);
+    EXPECT_FALSE(NULL == componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
+    EXPECT_FALSE(NULL == componentManager.getComponent(eid, TEST_COMPONENT2_MASK));
 
+    componentManager.clearEntity(eid);
+
+    EXPECT_TRUE(NULL == componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
+    EXPECT_TRUE(NULL == componentManager.getComponent(eid, TEST_COMPONENT2_MASK));
+}
+
+TEST_F(ComponentManagerTest, getComponentBundle)
+{
     Mask componentBundle1Mask = TEST_COMPONENT1_MASK;
     ComponentBundle componentBundle1 = componentManager.getComponentBundle(eid, componentBundle1Mask);
 

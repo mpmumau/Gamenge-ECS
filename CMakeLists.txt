@@ -12,6 +12,7 @@ project(ecs VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} LANGUAGES
 # find_package(assimp REQUIRED)
 
 add_library(ecs
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/ecs_common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source/src/ecs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source/src/entity_manager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source/src/component_manager.cpp
