@@ -14,11 +14,13 @@ namespace Gamenge {
 
         EID addEntity();
         void removeEntity(EID);
+        bool isEnabled(EID);
+
         void addMask(EID, Mask);
         Mask getMask(EID);
         void removeMask(EID, Mask);
-        bool isEnabled(EID);
 
+        Entity *getEntities();
     private:
         Entity entities[ECS_MAX_ENTITIES];
         EID nextEntity;

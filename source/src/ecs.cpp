@@ -2,6 +2,10 @@
 
 #include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
+#include <gamenge/ecs/entity_manager.hpp>
+#include <gamenge/ecs/component_manager.hpp>
+#include <gamenge/ecs/system_manager.hpp>
+
 #include <gamenge/ecs/ecs.hpp>
 
 using namespace Gamenge;
@@ -14,11 +18,6 @@ EID ECS::addEntity()
 Mask ECS::getEntity(EID eid)
 {
     return entityManager.getMask(eid);
-}
-
-bool ECS::isEnabled(EID eid)
-{
-    return entityManager.isEnabled(eid);
 }
 
 void ECS::removeEntity(EID eid)
@@ -44,7 +43,18 @@ void ECS::removeComponent(EID eid, Mask mask)
     entityManager.removeMask(eid, mask);
 }
 
+bool ECS::isEnabled(EID eid)
+{
+    return entityManager.isEnabled(eid);
+}
+
+void ECS::tick(Nanos delta)
+{
+    systemManager.tick(delta, &entityManager, &componentManager);
+}
+
 void ECS::destroy()
 {
     componentManager.destroy();
+    systemManager.destroy();
 }

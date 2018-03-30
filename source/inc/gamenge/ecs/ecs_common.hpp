@@ -9,6 +9,7 @@
 using namespace Gamenge;
 
 namespace Gamenge {
+
     typedef unsigned long long int Mask;
 
     typedef unsigned int EID;
@@ -28,6 +29,7 @@ namespace Gamenge {
         bool matches(Mask, Mask);
         bool matchesAny(Mask, Mask);
     }
-}
+
+} // end namespace Gamenge
 
 #endif

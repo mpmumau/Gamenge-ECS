@@ -18,16 +18,14 @@ EntityManager::EntityManager()
 EID EntityManager::addEntity()
 {
     EID eid = nextEntity;
-    Entity entity {0x00, true};
-    entities[eid] = entity;
+    entities[eid] = Entity {0x00, true};
     incrementNextEntity();
     return eid;
 }
 
 void EntityManager::removeEntity(EID eid)
 {
-    entities[eid].mask = 0x00;
-    entities[eid].enabled = false;
+    entities[eid] = Entity {0x00, false};
 }
 
 void EntityManager::addMask(EID eid, Mask mask)
@@ -48,6 +46,11 @@ void EntityManager::removeMask(EID eid, Mask mask)
 bool EntityManager::isEnabled(EID eid)
 {
     return entities[eid].enabled;
+}
+
+Entity *EntityManager::getEntities()
+{
+    return &entities[0];
 }
 
 void EntityManager::incrementNextEntity()

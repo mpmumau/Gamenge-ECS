@@ -4,6 +4,11 @@
 
 using namespace Gamenge;
 
+ComponentManager::~ComponentManager()
+{
+    destroy();
+}
+
 void ComponentManager::addComponent(EID eid, Mask mask, Component *component)
 {
     if (componentGroups.count(mask) == 0) {
@@ -15,23 +20,26 @@ void ComponentManager::addComponent(EID eid, Mask mask, Component *component)
 
 Component *ComponentManager::getComponent(EID eid, Mask mask)
 {
+    if (componentGroups.count(mask) == 0) {
+        return NULL;
+    }
+
     return componentGroups[mask][eid];
 }
 
 void ComponentManager::removeComponent(EID eid, Mask mask)
 {
-    if (componentGroups[mask][eid] != NULL) {
-        delete componentGroups[mask][eid];
+    if (componentGroups.count(mask) == 0 || componentGroups[mask][eid] == NULL) {
+        return;
     }
+
+    delete componentGroups[mask][eid];
     componentGroups[mask][eid] = NULL;
 }
 
 void ComponentManager::clearEntity(EID eid)
 {
-    for (std::map<Mask, ComponentGroup>::iterator it = componentGroups.begin();
-        it != componentGroups.end();
-        ++it
-    ) {
+    for (auto it = componentGroups.begin(); it != componentGroups.end(); ++it) {
         if (it->second[eid] == NULL) {
             continue;
         }
@@ -44,10 +52,7 @@ ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)
 {
     ComponentBundle componentBundle;
 
-    for (std::map<Mask, ComponentGroup>::iterator it = componentGroups.begin();
-        it != componentGroups.end();
-        ++it
-    ) {
+    for (auto it = componentGroups.begin(); it != componentGroups.end(); ++it) {
         if (MaskUtils::matchesAny(it->first, mask)) {
             componentBundle[it->first] = it->second[eid];
         }
@@ -58,25 +63,23 @@ ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)
 
 void ComponentManager::destroy()
 {
-    Component * component;
+    Component *component;
 
-    for (std::map<Mask, ComponentGroup>::iterator it = componentGroups.begin();
-        it != componentGroups.end();
-        ++it
-    ) {
-        for (int i = 0; i < ECS_MAX_ENTITIES; i++) {
-            component = it->second[i];
-            if (component != NULL) {
-                delete it->second[i];
+    for (auto it = componentGroups.begin(); it != componentGroups.end(); ++it) {
+        for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
+            component = it->second[eid];
+            if (component == NULL) {
+                continue;
             }
-            it->second[i] = NULL;
+            delete it->second[eid];
+            it->second[eid] = NULL;
         }
     }
 }
 
 void ComponentManager::createComponentGroup(Mask mask)
 {
-    for (unsigned int i = 0; i < ECS_MAX_ENTITIES; i++) {
-        componentGroups[mask][i] = NULL;
+    for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
+        componentGroups[mask][eid] = NULL;
     }
 }

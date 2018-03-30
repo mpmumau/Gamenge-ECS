@@ -9,8 +9,15 @@ using namespace Gamenge;
 TEST(EntityManagerTest, construct)
 {
     EntityManager entityManager;
+    Entity *entities = entityManager.getEntities();
+    Entity defaultEntity;
+    for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
+        EXPECT_EQ(defaultEntity.mask, entities[eid].mask);
+        EXPECT_EQ(defaultEntity.enabled, entities[eid].enabled);
 
-    EXPECT_EQ(false, entityManager.isEnabled(12));
+        EXPECT_EQ(0x00, entities[eid].mask);
+        EXPECT_EQ(false, entities[eid].enabled);
+    }
 }
 
 TEST(EntityManagerTest, addEntity)
@@ -20,7 +27,7 @@ TEST(EntityManagerTest, addEntity)
     EXPECT_TRUE(eid >= 0);
 
     EID eid2 = entity_manager.addEntity();
-    EXPECT_TRUE(eid2 > 0);
+    EXPECT_TRUE(eid2 > eid);
 }
 
 TEST(EntityManagerTest, removeEntity)
@@ -28,10 +35,10 @@ TEST(EntityManagerTest, removeEntity)
     EntityManager entityManager;
 
     EID eid = entityManager.addEntity();
-    EXPECT_EQ(true, entityManager.isEnabled(eid));
+    EXPECT_TRUE(entityManager.isEnabled(eid));
 
     entityManager.removeEntity(eid);
-    EXPECT_EQ(false, entityManager.isEnabled(eid));
+    EXPECT_FALSE(entityManager.isEnabled(eid));
 }
 
 TEST(EntityManagerTest, addGetMask)
@@ -39,11 +46,19 @@ TEST(EntityManagerTest, addGetMask)
     EntityManager entityManager;
 
     EID eid = entityManager.addEntity();
-    Mask mask = 0x01 < 17 | 0x01 < 12 | 0x01 < 3;
+    Mask mask = 0x01 << 17 | 0x01 << 12 | 0x01 << 3;
 
     entityManager.addMask(eid, mask);
-    EXPECT_TRUE(MaskUtils::matches(0x01 < 17 | 0x01 < 12 | 0x01 < 3, entityManager.getMask(eid)));
-    EXPECT_TRUE(MaskUtils::matchesAny(0x01 < 12, entityManager.getMask(eid)));
+    EXPECT_EQ(mask, entityManager.getMask(eid));
+    EXPECT_EQ(0x01 << 17 | 0x01 << 12 | 0x01 << 3, entityManager.getMask(eid));
+    EXPECT_FALSE(MaskUtils::matches(0x01 << 17, entityManager.getMask(eid)));
+    EXPECT_TRUE(MaskUtils::matches(0x01 << 17 | 0x01 << 12 | 0x01 << 3, entityManager.getMask(eid)));
+    EXPECT_TRUE(MaskUtils::matchesAny(0x01 << 12, entityManager.getMask(eid)));
+    EXPECT_TRUE(MaskUtils::matchesAny(0x01 << 3, entityManager.getMask(eid)));
+    EXPECT_TRUE(MaskUtils::matchesAny(0x01 << 17, entityManager.getMask(eid)));
+    EXPECT_FALSE(MaskUtils::matchesAny(0x01 << 4 | 0x01 << 13, entityManager.getMask(eid)));
+    EXPECT_TRUE(MaskUtils::matchesAny(0x01 << 3 | 0x01 << 12, entityManager.getMask(eid)));
+    EXPECT_TRUE(MaskUtils::matchesAny(0x01 << 17, entityManager.getMask(eid)));
 }
 
 TEST(EntityManagerTest, removeMask)
@@ -51,10 +66,10 @@ TEST(EntityManagerTest, removeMask)
     EntityManager entityManager;
     EID eid = entityManager.addEntity();
 
-    Mask component1 = 0x01 < 2;
-    Mask component2 = 0x01 < 17;
-    Mask component3 = 0x01 < 18;
-    Mask component4 = 0x01 < 32;
+    Mask component1 = 0x01 << 2;
+    Mask component2 = 0x01 << 17;
+    Mask component3 = 0x01 << 18;
+    Mask component4 = 0x01 << 31;
     Mask fullMask = component1 | component2 | component3 | component4;
 
     entityManager.addMask(eid, fullMask);

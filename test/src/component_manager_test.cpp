@@ -1,24 +1,25 @@
 #include <string>
-#include <stdio.h>
+#include <stdexcept>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
 #include <gamenge/ecs/ecs.hpp>
 #include <gamenge/ecs/component_manager.hpp>
 
+#define TEST_COMPONENT1_MASK 0x01 << 5
+#define TEST_COMPONENT2_MASK 0x01 << 17
+
 using namespace Gamenge;
 
 class ComponentManagerTest : public ::testing::Test {
     protected:
-        typedef struct TestComponent1 : Component {
+        typedef struct TestComponent1 : public Component {
             float x, y, z;
         } TestComponent1;
 
         typedef struct TestComponent2: Component {
             std::string color;
-            unsigned int r;
-            unsigned int g;
-            unsigned int b;
+            unsigned int r, g, b;
         } TestComponent2;
 
         virtual void SetUp()
@@ -42,14 +43,12 @@ class ComponentManagerTest : public ::testing::Test {
 
         virtual void TearDown() {
             ecs.destroy();
+            componentManager.destroy();
         }
 
         ECS ecs;
         ComponentManager componentManager;
         EID eid;
-
-        Mask TEST_COMPONENT1_MASK = 0x01 << 5;
-        Mask TEST_COMPONENT2_MASK = 0x01 << 17;
 
         TestComponent1 *component1;
         TestComponent2 *component2;
@@ -88,8 +87,8 @@ TEST_F(ComponentManagerTest, clearEntity)
 
     componentManager.clearEntity(eid);
 
-    EXPECT_TRUE(NULL == componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
-    EXPECT_TRUE(NULL == componentManager.getComponent(eid, TEST_COMPONENT2_MASK));
+    EXPECT_EQ(NULL, componentManager.getComponent(eid, TEST_COMPONENT1_MASK));
+    EXPECT_EQ(NULL, componentManager.getComponent(eid, TEST_COMPONENT2_MASK));
 }
 
 TEST_F(ComponentManagerTest, getComponentBundle)
@@ -101,6 +100,7 @@ TEST_F(ComponentManagerTest, getComponentBundle)
     EXPECT_EQ(0.123123f, returnedComponent1->x);
     EXPECT_EQ(1231.123123f, returnedComponent1->y);
     EXPECT_EQ(8123781623.1231f, returnedComponent1->z);
+    EXPECT_THROW(TestComponent2 *t2 = dynamic_cast<TestComponent2 *> (componentBundle1.at(TEST_COMPONENT2_MASK)), std::out_of_range);
 
     Mask componentBundle2Mask = TEST_COMPONENT1_MASK | TEST_COMPONENT2_MASK;
     ComponentBundle componentBundle2 = componentManager.getComponentBundle(eid, componentBundle2Mask);

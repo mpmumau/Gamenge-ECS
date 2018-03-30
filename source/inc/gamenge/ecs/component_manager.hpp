@@ -10,10 +10,13 @@ namespace Gamenge {
 
     class ComponentManager {
     public:
+        ~ComponentManager();
+
         void addComponent(EID, Mask, Component *);
         Component *getComponent(EID, Mask);
         void removeComponent(EID, Mask);
         void clearEntity(EID);
+
         ComponentBundle getComponentBundle(EID, Mask);
         void destroy();
     private:

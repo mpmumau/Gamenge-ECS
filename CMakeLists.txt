@@ -16,6 +16,8 @@ add_library(ecs
     ${CMAKE_CURRENT_SOURCE_DIR}/source/src/ecs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source/src/entity_manager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source/src/component_manager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/system_manager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/system.cpp
 )
 
 add_library(Gamenge::ECS ALIAS ecs)
@@ -35,6 +37,18 @@ target_compile_options(ecs
     PRIVATE 
         $<$<CXX_COMPILER_ID:GNU>:-Wall>
 )
+
+target_compile_features(ecs
+    PUBLIC
+        cxx_auto_type
+        #cxx_nullptr
+        #cxx_lambdas
+    PRIVATE
+)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # target_link_libraries(renderer
 #     PUBLIC
