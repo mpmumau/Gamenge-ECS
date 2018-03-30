@@ -43,6 +43,16 @@ void ECS::removeComponent(EID eid, Mask mask)
     entityManager.removeMask(eid, mask);
 }
 
+void ECS::addSystem(System *system)
+{
+    systemManager.addSystem(system);
+}
+
+void ECS::removeSystem(Mask mask)
+{
+    systemManager.removeSystem(mask);
+}
+
 bool ECS::isEnabled(EID eid)
 {
     return entityManager.isEnabled(eid);
