@@ -10,6 +10,7 @@ namespace Gamenge {
 
     class ComponentManager {
     public:
+        ComponentManager();
         ~ComponentManager();
 
         void addComponent(EID, Mask, Component *);
@@ -17,7 +18,10 @@ namespace Gamenge {
         void removeComponent(EID, Mask);
         void clearEntity(EID);
 
+        void receiveMessage(Message *);
+
         ComponentBundle getComponentBundle(EID, Mask);
+        ComponentBundle getComponentBundle(EID, Mask, bool);
         void destroy();
     private:
         typedef Component * ComponentGroup[ECS_MAX_ENTITIES];

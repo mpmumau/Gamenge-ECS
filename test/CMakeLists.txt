@@ -40,6 +40,7 @@ add_executable(ecs_test
     src/entity_manager_test.cpp
     src/component_manager_test.cpp
     src/system_manager_test.cpp
+    src/messaging_test.cpp
     # Add more test source here...
 )
 

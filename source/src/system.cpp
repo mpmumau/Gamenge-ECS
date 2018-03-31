@@ -8,6 +8,14 @@ System::System(Mask mask, unsigned short sortOrder)
 {
     this->mask = mask;
     this->sortOrder = sortOrder;
+    messaging = false;
+}
+
+System::System(Mask mask, unsigned short sortOrder, bool messaging)
+{
+    this->mask = mask;
+    this->sortOrder = sortOrder;
+    this->messaging = messaging;
 }
 
 Mask System::getMask()
@@ -18,4 +26,9 @@ Mask System::getMask()
 unsigned short System::getSortOrder()
 {
     return sortOrder;
+}
+
+bool System::usesMessaging()
+{
+    return messaging;
 }

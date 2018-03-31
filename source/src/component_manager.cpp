@@ -4,6 +4,13 @@
 
 using namespace Gamenge;
 
+ComponentManager::ComponentManager()
+{
+    for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
+        addComponent(eid, 0x00, new MessagingComponent());
+    }
+}
+
 ComponentManager::~ComponentManager()
 {
     destroy();
@@ -29,7 +36,10 @@ Component *ComponentManager::getComponent(EID eid, Mask mask)
 
 void ComponentManager::removeComponent(EID eid, Mask mask)
 {
-    if (componentGroups.count(mask) == 0 || componentGroups[mask][eid] == NULL) {
+    if (mask == 0x00 ||
+        componentGroups.count(mask) == 0 ||
+        componentGroups[mask][eid] == NULL
+    ) {
         return;
     }
 
@@ -40,15 +50,29 @@ void ComponentManager::removeComponent(EID eid, Mask mask)
 void ComponentManager::clearEntity(EID eid)
 {
     for (auto it = componentGroups.begin(); it != componentGroups.end(); ++it) {
-        if (it->second[eid] == NULL) {
+        if (it->first == 0x00 ||
+            it->second[eid] == NULL
+        ) {
             continue;
         }
+
         delete it->second[eid];
         it->second[eid] = NULL;
     }
 }
 
+void ComponentManager::receiveMessage(Message *message)
+{
+    MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(getComponent(message->target, 0x00));
+    messagingComponent->receiveMessage(message);
+}
+
 ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)
+{
+    return getComponentBundle(eid, mask, false);
+}
+
+ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask, bool includeMessaging)
 {
     ComponentBundle componentBundle;
 
@@ -58,19 +82,25 @@ ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)
         }
     }
 
+    if (includeMessaging) {
+        try {
+            componentBundle[0x00] = componentGroups.at(0x00)[eid];
+        } catch (const std::out_of_range& e) {
+            throw e;
+        }
+    }
+
     return componentBundle;
 }
 
 void ComponentManager::destroy()
 {
-    Component *component;
-
     for (auto it = componentGroups.begin(); it != componentGroups.end(); ++it) {
         for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
-            component = it->second[eid];
-            if (component == NULL) {
+            if (it->second[eid] == NULL) {
                 continue;
             }
+
             delete it->second[eid];
             it->second[eid] = NULL;
         }

@@ -12,3 +12,14 @@ bool MaskUtils::matchesAny(Mask needle, Mask haystack)
 {
     return (needle & haystack) != 0;
 }
+
+Message::Message(EID target, MessageType type)
+{
+    this->target = target;
+    this->type = type;
+}
+
+void MessagingComponent::receiveMessage(Message *message)
+{
+    messages.push_front(message);
+}

@@ -1,6 +1,8 @@
 #ifndef GAMENGE_ECS_ECS_DEF
 #define GAMENGE_ECS_ECS_DEF
 
+#include <forward_list>
+
 #include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/entity_manager.hpp>
@@ -23,6 +25,8 @@ namespace Gamenge {
         void addSystem(System *);
         void removeSystem(Mask);
 
+        void sendMessage(Message *);
+
         bool isEnabled(EID);
         void tick(Nanos);
         void destroy();
@@ -30,6 +34,10 @@ namespace Gamenge {
         EntityManager entityManager;
         ComponentManager componentManager;
         SystemManager systemManager;
+
+        std::forward_list<Message *> messages;
+        void dispatchMessages();
+        void destroyMessages();
     };
 
 } // end namespace Gamenge

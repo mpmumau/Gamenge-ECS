@@ -47,7 +47,12 @@ void SystemManager::tick(Nanos delta, EntityManager *entityManager, ComponentMan
                 continue;
             }
 
-            componentBundle = componentManager->getComponentBundle(eid, system->getMask());
+            if (system->usesMessaging()) {
+                componentBundle = componentManager->getComponentBundle(eid, system->getMask(), true);
+            } else {
+                componentBundle = componentManager->getComponentBundle(eid, system->getMask());
+            }
+            
             system->tick(delta, eid, componentBundle);
         }
     }

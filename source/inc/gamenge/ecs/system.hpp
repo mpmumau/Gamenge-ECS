@@ -11,13 +11,16 @@ namespace Gamenge {
     class System {
     public:
         System(Mask, unsigned short);
+        System(Mask, unsigned short, bool);
         virtual ~System() {};
         
         Mask getMask();
         unsigned short getSortOrder();
         virtual void tick(Nanos, EID, ComponentBundle) = 0;
+        bool usesMessaging();
     protected:
         Mask mask;
+        bool messaging;
         unsigned short sortOrder;
     };
 

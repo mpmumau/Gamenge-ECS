@@ -56,15 +56,21 @@ Entity *EntityManager::getEntities()
 void EntityManager::incrementNextEntity()
 {
     nextEntity++;
-    if (nextEntity < ECS_MAX_ENTITIES && !entities[nextEntity].enabled)
+
+    if (nextEntity < ECS_MAX_ENTITIES && 
+        !entities[nextEntity].enabled
+    ) {
         return;
+    }
 
     EID it = ECS_MAX_ENTITIES;
+    
     do {
         it--;
-        if(it < 0) {
+        if (it < 0) {
             throw std::runtime_error("Couldn't add entity; entity container full!");
         }
     } while (entities[it].enabled);
+
     nextEntity = it;
 }

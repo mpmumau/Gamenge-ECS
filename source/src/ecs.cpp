@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/entity_manager.hpp>
@@ -53,6 +51,11 @@ void ECS::removeSystem(Mask mask)
     systemManager.removeSystem(mask);
 }
 
+void ECS::sendMessage(Message *message)
+{
+    messages.push_front(message);
+}
+
 bool ECS::isEnabled(EID eid)
 {
     return entityManager.isEnabled(eid);
@@ -60,11 +63,35 @@ bool ECS::isEnabled(EID eid)
 
 void ECS::tick(Nanos delta)
 {
+    dispatchMessages();
     systemManager.tick(delta, &entityManager, &componentManager);
+    destroyMessages();
 }
 
 void ECS::destroy()
 {
     componentManager.destroy();
     systemManager.destroy();
+    destroyMessages();
+}
+
+void ECS::dispatchMessages()
+{
+    for (auto it = messages.begin(); it != messages.end(); ++it) {
+        componentManager.receiveMessage(*it);
+    }
+}
+
+void ECS::destroyMessages()
+{
+    for (auto it = messages.begin(); it != messages.end(); ++it) {
+        if (*it == NULL) {
+            continue;
+        }
+
+        delete *it;
+        *it = NULL;
+    }
+
+    messages.clear();
 }
