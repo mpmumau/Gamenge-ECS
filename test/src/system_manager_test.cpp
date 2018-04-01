@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <stdio.h>
 #include <string>
 #include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
@@ -19,28 +18,26 @@ class SystemManagerFixtureTest : public ::testing::Test {
 protected:
     class PositionSystem : public System {
     public:
-        PositionSystem() : System(TEST_COMPONENT_1, 1) {};
+        PositionSystem() : System(Mask(TEST_COMPONENT_1), 1) {};
         unsigned short getTimesTicked() { return timesTicked; };
         unsigned short getMasterSum() { return masterSum; };
-    private:
         void tick(Nanos delta, EID eid, ComponentBundle componentBundle)
         {
-            TestComponent1 *testComponent1 = dynamic_cast<TestComponent1 *>(componentBundle[TEST_COMPONENT_1]);
+            TestComponent1 *testComponent1 = dynamic_cast<TestComponent1 *>(componentBundle[Mask(TEST_COMPONENT_1)]);
             masterSum += testComponent1->v1;
             masterSum += testComponent1->v2;
 
             timesTicked++;
         }
-
+    private:
         unsigned short timesTicked = 0;
         unsigned short masterSum = 0;
     };
 
     class OtherSystem : public System {
     public:
-        OtherSystem() : System(TEST_COMPONENT_1 | TEST_COMPONENT_2, 2) {};
+        OtherSystem() : System(Mask(TEST_COMPONENT_1) | Mask(TEST_COMPONENT_2), 2) {};
         unsigned int getRunningTally() { return runningTally; };
-    private:
         void tick(Nanos delta, EID eid, ComponentBundle componentBundle)
         {
             TestComponent1 *testComponent1 = dynamic_cast<TestComponent1 *>(componentBundle[TEST_COMPONENT_1]);
@@ -48,7 +45,7 @@ protected:
 
             runningTally += (testComponent1->v1 * testComponent2->multiplier1) + (testComponent1->v2 * testComponent2->multiplier2);
         }
-
+    private:
         unsigned int runningTally = 0;
     };
 
@@ -105,12 +102,12 @@ TEST_F(SystemManagerFixtureTest, tick)
     EID eid = entityManager.addEntity();
 
     TestComponent1 *testComponent1 = new TestComponent1();
-    entityManager.addMask(eid, TEST_COMPONENT_1);
-    componentManager.addComponent(eid, TEST_COMPONENT_1, testComponent1);
+    entityManager.addMask(eid, Mask(TEST_COMPONENT_1));
+    componentManager.addComponent(eid, Mask(TEST_COMPONENT_1), testComponent1);
 
     TestComponent2 *testComponent2 = new TestComponent2();
-    entityManager.addMask(eid, TEST_COMPONENT_2);
-    componentManager.addComponent(eid, TEST_COMPONENT_2, testComponent2);
+    entityManager.addMask(eid, Mask(TEST_COMPONENT_2));
+    componentManager.addComponent(eid, Mask(TEST_COMPONENT_2), testComponent2);
 
     PositionSystem *positionSystem = new PositionSystem();
     OtherSystem *otherSystem = new OtherSystem();

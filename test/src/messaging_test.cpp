@@ -31,21 +31,21 @@ class MessagingFixtureTest : public ::testing::Test {
 
         class MessagingSystem : public System {
         public:
-            MessagingSystem() : System(0x14, 1, true) {};
+            MessagingSystem() : System(Mask(TRANSFORM_COMPONENT_MASK), 1, true) {};
 
             void tick(Nanos delta, EID eid, ComponentBundle componentBundle) {
-                MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(componentBundle.at(0x00));
+                MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(componentBundle.at(Mask(0x00)));
 
                 std::vector<KillMessage *> killMessages;
                 std::vector<DataMessage *> dataMessages;
 
                 for (auto it = messagingComponent->messages.begin(); it != messagingComponent->messages.end(); ++it) {
                     if (((Message *) *it)->type == KILL_MESSAGE) {
-                        killMessages.push_back(dynamic_cast<KillMessage*>(((Message *) *it)));
+                        killMessages.push_back(dynamic_cast<KillMessage *>(*it));
                     }
 
                     if (((Message *) *it)->type == DATA_MESSAGE) {
-                        dataMessages.push_back(dynamic_cast<DataMessage*>(((Message *) *it)));
+                        dataMessages.push_back(dynamic_cast<DataMessage *>(*it));
                     }
                 }
 
@@ -70,8 +70,8 @@ class MessagingFixtureTest : public ::testing::Test {
             entity1 = ecs.addEntity();
             entity2 = ecs.addEntity();
 
-            ecs.addComponent(entity1, TRANSFORM_COMPONENT_MASK, new TransformComponent());
-            ecs.addComponent(entity2, TRANSFORM_COMPONENT_MASK, new TransformComponent());
+            ecs.addComponent(entity1, Mask(TRANSFORM_COMPONENT_MASK), new TransformComponent());
+            ecs.addComponent(entity2, Mask(TRANSFORM_COMPONENT_MASK), new TransformComponent());
 
             messagingSystem = new MessagingSystem();
             ecs.addSystem(messagingSystem);

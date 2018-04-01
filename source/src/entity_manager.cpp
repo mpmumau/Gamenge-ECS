@@ -9,7 +9,7 @@ using namespace Gamenge;
 EntityManager::EntityManager()
 {
     for (int eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
-        entities[eid] = Entity {0x00, false};
+        entities[eid] = Entity();
     }
 
     nextEntity = 0;
@@ -18,14 +18,14 @@ EntityManager::EntityManager()
 EID EntityManager::addEntity()
 {
     EID eid = nextEntity;
-    entities[eid] = Entity {0x00, true};
+    entities[eid] = Entity(Mask(0x00), true);
     incrementNextEntity();
     return eid;
 }
 
 void EntityManager::removeEntity(EID eid)
 {
-    entities[eid] = Entity {0x00, false};
+    entities[eid] = Entity(Mask(0x00), false);
 }
 
 void EntityManager::addMask(EID eid, Mask mask)

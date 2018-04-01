@@ -10,7 +10,19 @@ bool MaskUtils::matches(Mask needle, Mask haystack)
 
 bool MaskUtils::matchesAny(Mask needle, Mask haystack)
 {
-    return (needle & haystack) != 0;
+    return (needle & haystack) != Mask(0x00);
+}
+
+Entity::Entity()
+{
+    mask = Mask(0x00);
+    enabled = false;
+}
+
+Entity::Entity(Mask mask, bool enabled)
+{
+    this->mask = mask;
+    this->enabled = enabled;
 }
 
 Message::Message(EID target, MessageType type)

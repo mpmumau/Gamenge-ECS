@@ -21,6 +21,12 @@ class ECSFixtureTest : public ::testing::Test {
             unsigned int b;
         } TestComponent2;
 
+        class TestSystem : public System {
+        public:
+            TestSystem() : System(Mask(0x01), 1, true) {};
+            void tick(Nanos delta, EID eid, ComponentBundle componentBundle) {};
+        };
+
         virtual void SetUp()
         {
             eid = ecs.addEntity();
@@ -55,7 +61,7 @@ TEST(ECSTest, addGetEntity)
     EID eid = ecs.addEntity();
 
     EXPECT_TRUE(0 <= eid);
-    EXPECT_EQ(0x00, ecs.getEntity(eid));
+    EXPECT_EQ(Mask(0x00), ecs.getEntity(eid));
     EXPECT_TRUE(ecs.isEnabled(eid));
 }
 
@@ -63,33 +69,33 @@ TEST(ECSTest, removeEntity)
 {
     ECS ecs;
     EID eid = ecs.addEntity();
-    EXPECT_EQ(0x00, ecs.getEntity(eid));
+    EXPECT_EQ(Mask(0x00), ecs.getEntity(eid));
     EXPECT_TRUE(ecs.isEnabled(eid));
 
     ecs.removeEntity(eid);
-    EXPECT_EQ(0x00, ecs.getEntity(eid));
+    EXPECT_EQ(Mask(0x00), ecs.getEntity(eid));
     EXPECT_FALSE(ecs.isEnabled(eid));
 }
 
 TEST_F(ECSFixtureTest, addGetComponent)
 {
-    ecs.addComponent(eid, TEST_COMPONENT1_MASK, component1);
-    ecs.addComponent(eid, TEST_COMPONENT2_MASK, component2);
+    ecs.addComponent(eid, Mask(TEST_COMPONENT1_MASK), component1);
+    ecs.addComponent(eid, Mask(TEST_COMPONENT2_MASK), component2);
 
-    EXPECT_TRUE(NULL != ecs.getComponent(eid, TEST_COMPONENT1_MASK));
-    EXPECT_TRUE(NULL != ecs.getComponent(eid, TEST_COMPONENT2_MASK));
+    EXPECT_TRUE(NULL != ecs.getComponent(eid, Mask(TEST_COMPONENT1_MASK)));
+    EXPECT_TRUE(NULL != ecs.getComponent(eid, Mask(TEST_COMPONENT2_MASK)));
 }
 
 TEST_F(ECSFixtureTest, removeComponent)
 {
-    ecs.addComponent(eid, TEST_COMPONENT1_MASK, component1);
-    ecs.addComponent(eid, TEST_COMPONENT2_MASK, component2);
+    ecs.addComponent(eid, Mask(TEST_COMPONENT1_MASK), component1);
+    ecs.addComponent(eid, Mask(TEST_COMPONENT2_MASK), component2);
 
-    EXPECT_TRUE(NULL != ecs.getComponent(eid, TEST_COMPONENT1_MASK));
-    ecs.removeComponent(eid, TEST_COMPONENT1_MASK);
-    EXPECT_EQ(NULL, ecs.getComponent(eid, TEST_COMPONENT1_MASK));
+    EXPECT_TRUE(NULL != ecs.getComponent(eid, Mask(TEST_COMPONENT1_MASK)));
+    ecs.removeComponent(eid, Mask(TEST_COMPONENT1_MASK));
+    EXPECT_EQ(NULL, ecs.getComponent(eid, Mask(TEST_COMPONENT1_MASK)));
 
-    EXPECT_TRUE(NULL != ecs.getComponent(eid, TEST_COMPONENT2_MASK));
-    ecs.removeComponent(eid, TEST_COMPONENT2_MASK);
-    EXPECT_EQ(NULL, ecs.getComponent(eid, TEST_COMPONENT2_MASK));
+    EXPECT_TRUE(NULL != ecs.getComponent(eid, Mask(TEST_COMPONENT2_MASK)));
+    ecs.removeComponent(eid, Mask(TEST_COMPONENT2_MASK));
+    EXPECT_EQ(NULL, ecs.getComponent(eid, Mask(TEST_COMPONENT2_MASK)));
 }

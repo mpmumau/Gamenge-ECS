@@ -26,6 +26,10 @@ void SystemManager::removeSystem(Mask mask)
         break;
     }
 
+    if (system == NULL) {
+        return;
+    }
+
     delete system;
     systems.remove(system);
 }
@@ -43,7 +47,7 @@ void SystemManager::tick(Nanos delta, EntityManager *entityManager, ComponentMan
     for (auto it = systems.begin(); it != systems.end(); ++it) {
         system = *it;
         for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
-            if (entities[eid].mask == 0x00 || !entities[eid].enabled) {
+            if (entities[eid].mask == Mask(0x00) || !entities[eid].enabled) {
                 continue;
             }
 

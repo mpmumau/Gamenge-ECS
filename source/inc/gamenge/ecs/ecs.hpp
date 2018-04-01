@@ -1,5 +1,5 @@
-#ifndef GAMENGE_ECS_ECS_DEF
-#define GAMENGE_ECS_ECS_DEF
+#ifndef GAMENGE_ECS_ECS_H
+#define GAMENGE_ECS_ECS_H
 
 #include <forward_list>
 
@@ -17,6 +17,7 @@ namespace Gamenge {
         EID addEntity();
         Mask getEntity(EID);
         void removeEntity(EID);
+        bool isEnabled(EID);
 
         void addComponent(EID, Mask, Component *);
         Component *getComponent(EID, Mask);
@@ -26,8 +27,6 @@ namespace Gamenge {
         void removeSystem(Mask);
 
         void sendMessage(Message *);
-
-        bool isEnabled(EID);
         void tick(Nanos);
         void destroy();
     private:

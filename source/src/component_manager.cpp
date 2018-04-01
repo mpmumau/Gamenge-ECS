@@ -7,7 +7,7 @@ using namespace Gamenge;
 ComponentManager::ComponentManager()
 {
     for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
-        addComponent(eid, 0x00, new MessagingComponent());
+        addComponent(eid, Mask(0x00), new MessagingComponent());
     }
 }
 
@@ -36,7 +36,7 @@ Component *ComponentManager::getComponent(EID eid, Mask mask)
 
 void ComponentManager::removeComponent(EID eid, Mask mask)
 {
-    if (mask == 0x00 ||
+    if (mask == Mask(0x00) ||
         componentGroups.count(mask) == 0 ||
         componentGroups[mask][eid] == NULL
     ) {
@@ -50,7 +50,7 @@ void ComponentManager::removeComponent(EID eid, Mask mask)
 void ComponentManager::clearEntity(EID eid)
 {
     for (auto it = componentGroups.begin(); it != componentGroups.end(); ++it) {
-        if (it->first == 0x00 ||
+        if (it->first == Mask(0x00) ||
             it->second[eid] == NULL
         ) {
             continue;
@@ -63,8 +63,16 @@ void ComponentManager::clearEntity(EID eid)
 
 void ComponentManager::receiveMessage(Message *message)
 {
-    MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(getComponent(message->target, 0x00));
+    MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(getComponent(message->target, Mask(0x00)));
     messagingComponent->receiveMessage(message);
+}
+
+void ComponentManager::clearAllMessages()
+{
+    for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
+        MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(getComponent(eid, Mask(0x00)));
+        messagingComponent->messages.clear();
+    }
 }
 
 ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)
@@ -84,7 +92,7 @@ ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask, bool in
 
     if (includeMessaging) {
         try {
-            componentBundle[0x00] = componentGroups.at(0x00)[eid];
+            componentBundle[Mask(0x00)] = componentGroups.at(Mask(0x00))[eid];
         } catch (const std::out_of_range& e) {
             throw e;
         }

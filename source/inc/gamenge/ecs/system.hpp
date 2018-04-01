@@ -16,8 +16,9 @@ namespace Gamenge {
         
         Mask getMask();
         unsigned short getSortOrder();
-        virtual void tick(Nanos, EID, ComponentBundle) = 0;
         bool usesMessaging();
+
+        virtual void tick(Nanos, EID, ComponentBundle) = 0;
     protected:
         Mask mask;
         bool messaging;

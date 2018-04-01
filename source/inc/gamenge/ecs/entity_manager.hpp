@@ -1,5 +1,5 @@
-#ifndef GAMENGE_ENTITY_MANAGER_H
-#define GAMENGE_ENTITY_MANAGER_H
+#ifndef GAMENGE_ECS_ENTITY_MANAGER_H
+#define GAMENGE_ECS_ENTITY_MANAGER_H
 
 #include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>

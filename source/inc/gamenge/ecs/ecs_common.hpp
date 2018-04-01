@@ -1,28 +1,28 @@
 #ifndef GAMENGE_ECS_COMMON_H
 #define GAMENGE_ECS_COMMON_H
 
-#include <map>
+#include <bitset>
+#include <unordered_map>
 #include <forward_list>
 #include <gamenge/common/common.hpp>
 
 #define ECS_MAX_ENTITIES 65536
+#define ECS_MAX_COMPONENTS 128
 
 using namespace Gamenge;
 
 namespace Gamenge {
 
-    typedef unsigned long long int Mask;
+    typedef std::bitset<ECS_MAX_COMPONENTS> Mask;
 
     typedef unsigned int EID;
 
     typedef struct Entity {
+        Entity();
+        Entity(Mask, bool);
         Mask mask;
         bool enabled;
     } Entity;
-    
-    typedef struct Component {
-        virtual ~Component() {}
-    } Component;
 
     typedef unsigned short MessageType;
 
@@ -32,13 +32,17 @@ namespace Gamenge {
         EID target;
         MessageType type;
     } Message;
+    
+    typedef struct Component {
+        virtual ~Component() {}
+    } Component;
 
     typedef struct MessagingComponent : public Component {
         void receiveMessage(Message *);
         std::forward_list<Message *> messages;
     } MessagingComponent;
 
-    typedef std::map<Mask, Component *> ComponentBundle;
+    typedef std::unordered_map<Mask, Component *> ComponentBundle;
 
     namespace MaskUtils {
         bool matches(Mask, Mask);

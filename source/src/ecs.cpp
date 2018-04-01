@@ -24,6 +24,11 @@ void ECS::removeEntity(EID eid)
     entityManager.removeEntity(eid);
 }
 
+bool ECS::isEnabled(EID eid)
+{
+    return entityManager.isEnabled(eid);
+}
+
 void ECS::addComponent(EID eid, Mask mask, Component *component)
 {
     componentManager.addComponent(eid, mask, component);
@@ -56,15 +61,11 @@ void ECS::sendMessage(Message *message)
     messages.push_front(message);
 }
 
-bool ECS::isEnabled(EID eid)
-{
-    return entityManager.isEnabled(eid);
-}
-
 void ECS::tick(Nanos delta)
 {
     dispatchMessages();
     systemManager.tick(delta, &entityManager, &componentManager);
+    componentManager.clearAllMessages();
     destroyMessages();
 }
 
