@@ -1,5 +1,7 @@
 # Gamenge::ECS
 
+[![Build Status](https://travis-ci.org/mpmumau/Gamenge-ECS.svg?branch=master)](https://travis-ci.org/mpmumau/Gamenge-ECS)
+
 **Author:** Matthew Mumau <mpmumau@gmail.com>  
 **Created:** March 26, 2018  
 **License:** MIT License (see LICENSE file for more information)
