@@ -141,6 +141,14 @@ Messages are dispatched to each interested System via a provided `MessagingCompo
 
 Memory for `Messages` is automatically deleted when it is no longer needed. No need to `delete` your newly created messages (in fact, don't!)
 
+## Running the unit tests
+
+From the build directory created during the installation process, run the command `make test` or `make test ARGS="-V"` to run the unit tests manually. They are also run during continuous integration, implemented on the Travis CI service.
+
+## Building the documentation
+
+From the build directory above, run `make doc` to build the automated HTML documentation, which will then be located in the `doc` directory from the project root.
+
 ## More Information
 
 Consult the documents in the `docs` folder for detailed information about the use of the above functions, and more. Reading the `test` source files is also a good way to see examples of potential implementations of the ECS data structure.
