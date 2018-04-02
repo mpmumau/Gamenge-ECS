@@ -63,10 +63,7 @@ namespace Gamenge {
          */
         void receiveMessage(Message *);
 
-        /**
-         * @brief Clears all Message objects in MessagingComponents of all Entities.
-         */
-        void clearAllMessages();
+        void deleteMessage(Message *);
 
         /**
          * @brief  Get a ComponentBundle value for the Entity, with Component pointers specified by the Mask.

@@ -34,3 +34,8 @@ void MessagingComponent::receiveMessage(Message *message)
 {
     messages.push_front(message);
 }
+
+void MessagingComponent::deleteMessage(Message *message)
+{
+    messages.remove(message);
+}

@@ -60,12 +60,17 @@ void ECS::sendMessage(Message *message)
     messages.push_front(message);
 }
 
+void ECS::deleteMessage(Message *message)
+{
+    componentManager.deleteMessage(message);
+    messages.remove(message);
+    delete message;
+}
+
 void ECS::tick(Nanos delta)
 {
     dispatchMessages();
     systemManager.tick(delta, &entityManager, &componentManager);
-    componentManager.clearAllMessages();
-    destroyMessages();
 }
 
 void ECS::destroy()

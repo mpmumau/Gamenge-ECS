@@ -94,6 +94,14 @@ namespace Gamenge {
         void sendMessage(Message *);
 
         /**
+         * @brief  Delete a message from the Message container and the entity's component.
+         * @details [long description]
+         * 
+         * @param e [description]
+         */
+        void deleteMessage(Message *);
+
+        /**
          * @brief  Tick the ECS one step forward.
          * 
          * @param  delta  The amount of nanoseconds represented by the tick.

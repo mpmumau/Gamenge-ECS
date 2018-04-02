@@ -66,12 +66,10 @@ void ComponentManager::receiveMessage(Message *message)
     messagingComponent->receiveMessage(message);
 }
 
-void ComponentManager::clearAllMessages()
+void ComponentManager::deleteMessage(Message *message)
 {
-    for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
-        MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(getComponent(eid, Mask(0x00)));
-        messagingComponent->messages.clear();
-    }
+    MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(getComponent(message->target, Mask(0x00)));
+    messagingComponent->deleteMessage(message);
 }
 
 ComponentBundle ComponentManager::getComponentBundle(EID eid, Mask mask)

@@ -38,6 +38,7 @@ namespace Gamenge {
 
     typedef struct MessagingComponent : public Component {
         void receiveMessage(Message *);
+        void deleteMessage(Message *);
         std::forward_list<Message *> messages;
     } MessagingComponent;
 

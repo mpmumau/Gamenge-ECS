@@ -33,7 +33,10 @@ class MessagingFixtureTest : public ::testing::Test {
 
         class MessagingSystem : public System {
         public:
-            MessagingSystem() : System(Mask(TRANSFORM_COMPONENT_MASK), 1, true) {};
+            MessagingSystem(ECS *ecs) : System(Mask(TRANSFORM_COMPONENT_MASK), 1, true)
+            {
+                this->ecs = ecs;
+            };
 
             void tick(Nanos delta, EID eid, ComponentBundle componentBundle) {
                 MessagingComponent *messagingComponent = dynamic_cast<MessagingComponent *>(componentBundle.at(Mask(0x00)));
@@ -53,16 +56,19 @@ class MessagingFixtureTest : public ::testing::Test {
 
                 for (auto it = killMessages.begin(); it != killMessages.end(); ++it) {
                     masterString += ((KillMessage *) *it)->message;
+                    ecs->deleteMessage((Message *) *it);
                 }
 
                 for (auto it = dataMessages.begin(); it != dataMessages.end(); ++it) {
                     masterData += ((DataMessage *) *it)->data;
+                    ecs->deleteMessage((Message *) *it);
                 }
             }
 
             std::string getMasterString() { return masterString; };
             unsigned int getMasterData() { return masterData; }
         private:
+            ECS *ecs;
             std::string masterString = "";
             unsigned int masterData = 0;
         };
@@ -75,7 +81,7 @@ class MessagingFixtureTest : public ::testing::Test {
             ecs.addComponent(entity1, Mask(TRANSFORM_COMPONENT_MASK), new TransformComponent());
             ecs.addComponent(entity2, Mask(TRANSFORM_COMPONENT_MASK), new TransformComponent());
 
-            messagingSystem = new MessagingSystem();
+            messagingSystem = new MessagingSystem(&ecs);
             ecs.addSystem(messagingSystem);
         }
 
@@ -101,7 +107,10 @@ TEST_F(MessagingFixtureTest, aTest)
     ecs.sendMessage(killMessage2);
 
     ecs.tick(1234);
+    EXPECT_EQ("abcxyz", messagingSystem->getMasterString());
+    EXPECT_EQ(0, messagingSystem->getMasterData());
 
+    ecs.tick(1234);
     EXPECT_EQ("abcxyz", messagingSystem->getMasterString());
     EXPECT_EQ(0, messagingSystem->getMasterData());
 
@@ -116,5 +125,8 @@ TEST_F(MessagingFixtureTest, aTest)
 
     ecs.tick(1234);
 
+    EXPECT_EQ(27, messagingSystem->getMasterData());
+
+    ecs.tick(1234);
     EXPECT_EQ(27, messagingSystem->getMasterData());
 }
