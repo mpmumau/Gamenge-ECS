@@ -3,7 +3,6 @@
 
 #include <unordered_map>
 
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 
 namespace Gamenge {

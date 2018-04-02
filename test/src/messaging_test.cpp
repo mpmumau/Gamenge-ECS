@@ -8,6 +8,8 @@
 
 #define TRANSFORM_COMPONENT_MASK 0x01 << 14
 
+using namespace Gamenge;
+
 class MessagingFixtureTest : public ::testing::Test {
     protected:
         enum MessageType {

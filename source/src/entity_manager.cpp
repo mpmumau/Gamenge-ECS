@@ -1,6 +1,5 @@
 #include <stdexcept>
 
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/entity_manager.hpp>
 

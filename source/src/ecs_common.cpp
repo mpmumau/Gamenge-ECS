@@ -1,4 +1,3 @@
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 
 using namespace Gamenge;

@@ -1,10 +1,7 @@
 #ifndef GAMENGE_ECS_SYSTEM_H
 #define GAMENGE_ECS_SYSTEM_H
 
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
-
-using namespace Gamenge;
 
 namespace Gamenge {
 

@@ -3,12 +3,9 @@
 
 #include <forward_list>
 
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/system.hpp>
 #include <gamenge/ecs/entity_manager.hpp>
 #include <gamenge/ecs/component_manager.hpp>
-
-using namespace Gamenge;
 
 namespace Gamenge {
     /**

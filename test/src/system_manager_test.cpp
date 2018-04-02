@@ -2,7 +2,6 @@
 #include <gmock/gmock.h>
 
 #include <string>
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/ecs.hpp>
 #include <gamenge/ecs/entity_manager.hpp>

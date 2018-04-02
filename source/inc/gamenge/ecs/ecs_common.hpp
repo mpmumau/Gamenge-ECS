@@ -4,14 +4,13 @@
 #include <bitset>
 #include <unordered_map>
 #include <forward_list>
-#include <gamenge/common/common.hpp>
 
 #define ECS_MAX_ENTITIES 65536
 #define ECS_MAX_COMPONENTS 128
 
-using namespace Gamenge;
-
 namespace Gamenge {
+
+    typedef unsigned long long Nanos;
 
     typedef std::bitset<ECS_MAX_COMPONENTS> Mask;
 

@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <gamenge/common/common.hpp>
 #include <gamenge/ecs/ecs_common.hpp>
 #include <gamenge/ecs/ecs.hpp>
 
 #define TEST_COMPONENT1_MASK 0x01 << 5
 #define TEST_COMPONENT2_MASK 0x01 << 17
+
+using namespace Gamenge;
 
 class ECSFixtureTest : public ::testing::Test {
     protected:
