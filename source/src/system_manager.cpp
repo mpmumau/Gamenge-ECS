@@ -37,7 +37,10 @@ void SystemManager::tick(Nanos delta, EntityManager *entityManager, ComponentMan
     for (auto it = systems.begin(); it != systems.end(); ++it) {
         system = *it;
         for (EID eid = 0; eid < ECS_MAX_ENTITIES; eid++) {
-            if (entities[eid].mask == Mask(0x00) || !entities[eid].enabled) {
+            if (entities[eid].mask == Mask(0x00) || 
+                !entities[eid].enabled ||
+                !MaskUtils::matches(entities[eid].mask, system->getMask())
+            ) {
                 continue;
             }
 

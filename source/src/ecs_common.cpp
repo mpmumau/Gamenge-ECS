@@ -3,9 +3,9 @@
 
 using namespace Gamenge;
 
-bool MaskUtils::matches(Mask needle, Mask haystack)
+bool MaskUtils::matches(Mask haystack, Mask needle)
 {
-    return (needle & haystack) == haystack;
+    return (needle & haystack) == needle;
 }
 
 bool MaskUtils::matchesAny(Mask needle, Mask haystack)
