@@ -87,10 +87,10 @@ TEST_F(SystemManagerFixtureTest, removeSystem)
 
     EXPECT_EQ(2, systemManager.getNumSystems());
 
-    systemManager.removeSystem(otherSystem->getMask());
+    systemManager.removeSystem(otherSystem);
     EXPECT_EQ(1, systemManager.getNumSystems());
 
-    systemManager.removeSystem(positionSystem->getMask());
+    systemManager.removeSystem(positionSystem);
     EXPECT_EQ(0, systemManager.getNumSystems());
 }
 

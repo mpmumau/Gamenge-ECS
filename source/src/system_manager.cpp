@@ -14,18 +14,8 @@ void SystemManager::addSystem(System *system)
     systems.sort(sortSystems);
 }
 
-void SystemManager::removeSystem(Mask mask)
+void SystemManager::removeSystem(System *system)
 {
-    System *system;
-
-    for (auto it = systems.begin(); it != systems.end(); ++it) {
-        system = *it;
-        if (system->getMask() != mask) {
-            continue;
-        }
-        break;
-    }
-
     if (system == NULL) {
         return;
     }

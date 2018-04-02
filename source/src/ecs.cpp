@@ -51,9 +51,9 @@ void ECS::addSystem(System *system)
     systemManager.addSystem(system);
 }
 
-void ECS::removeSystem(Mask mask)
+void ECS::removeSystem(System *system)
 {
-    systemManager.removeSystem(mask);
+    systemManager.removeSystem(system);
 }
 
 void ECS::sendMessage(Message *message)
